@@ -16,7 +16,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
     QString hash = QString(define2string(GIT_HASH));
     hash.truncate(8);
     ui->versionLabel->setText(tr("(%1-%2)").arg(hash)
-                               .arg(define2string(GIT_COMMIT)));
+                               .arg(""));
     ui->linkLabel->setOpenExternalLinks(true);
 }
 
