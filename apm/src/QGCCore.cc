@@ -179,9 +179,11 @@ void QGCCore::initialize()
     MainWindow::instance()->addLink(slink);
 
     mainWindow = MainWindow::instance(splashScreen);
+    mainWindow->setWindowFlags(Qt::Window | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint);
 
     // Remove splash screen
     splashScreen->finish(mainWindow);
+    mainWindow->showMaximized();
 
     if (upgraded) mainWindow->showInfoMessage(tr("Default Settings Loaded"),
                                               tr("APM Planner has been upgraded from version %1 to version %2. Some of your user preferences have been reset to defaults for safety reasons. Please adjust them where needed.").arg(lastApplicationVersion).arg(QGC_APPLICATION_VERSION));
@@ -278,6 +280,18 @@ void QGCCore::startUASManager()
             pluginFileNames += fileName;
             //printf(QString("Loaded plugin from " + fileName + "\n").toStdString().c_str());
         }
+    }
+}
+
+bool QGCCore::eventFilter(QObject *obj, QEvent *event)
+{
+    if (event->type() == QEvent::ApplicationDeactivated) {
+        mainWindow->setWindowState(Qt::WindowMinimized);
+        mainWindow->setWindowState(Qt::WindowActive);
+        return true;
+    } else {
+        // standard event processing
+        return QObject::eventFilter(obj, event);
     }
 }
 

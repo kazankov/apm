@@ -72,7 +72,7 @@ protected:
      * The robot manager keeps track of the configured robots.
      **/
     void startUASManager();
-
+    bool eventFilter(QObject *obj, QEvent *event);
 private:
     MainWindow* mainWindow;
     QGCMouseWheelEventFilter *m_mouseWheelFilter;

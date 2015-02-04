@@ -1041,6 +1041,9 @@ void MainWindow::showHILConfigurationWidget(UASInterface* uas)
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    event->ignore();
+    return;
+
     if (isVisible()) storeViewState();
     aboutToCloseFlag = true;
     storeSettings();
@@ -1048,6 +1051,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
     UASManager::instance()->storeSettings();
     QMainWindow::closeEvent(event);
 }
+
 
 /**
  * Connect the signals and slots of the common window widgets
