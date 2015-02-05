@@ -1,12 +1,16 @@
 Name "APM Planner 2"
 
 !ifndef QTDIR
+!define QTDIR "$%QTDIR%"
+!endif
+
+!ifndef QTDIR
   !error "Please define QT installation directory via /DQTDIR=C:\qt\4.8.4"
 !endif
 
-!system 'C:\Python27\python apm_installer.py ../files apm_install.list apm_uninstall.list y'
-!system 'C:\Python27\python apm_installer.py ../qml qml_install.list qml_uninstall.list y'
-!system 'C:\Python27\python apm_installer.py ${QTDIR}\plugins qt_install.list qt_uninstall.list n'
+!system 'python apm_installer.py ../files apm_install.list apm_uninstall.list y'
+!system 'python apm_installer.py ../qml qml_install.list qml_uninstall.list y'
+!system 'python apm_installer.py ${QTDIR}\plugins qt_install.list qt_uninstall.list n'
 
 OutFile "apmplanner2-installer-win32.exe"
 
@@ -24,7 +28,7 @@ LicenseData ..\license.txt
 Section "APM Planner 2 files"
 
   SetOutPath $INSTDIR
-  File ..\release\apmplanner2.exe
+  File ..\debug\apmplanner2.exe
   !include apm_install.list
   !include qml_install.list
   SetOutPath $INSTDIR
@@ -42,22 +46,22 @@ Section "Qt components"
   !include qt_install.list
   SetOutPath $INSTDIR
 
-  File ${QTDIR}\lib\QtCore4.dll
-  File ${QTDIR}\lib\QtGui4.dll
-  File ${QTDIR}\lib\QtScript4.dll
-  File ${QTDIR}\lib\QtMultimedia4.dll
-  File ${QTDIR}\lib\QtDeclarative4.dll
-  File ${QTDIR}\lib\phonon4.dll
-  File ${QTDIR}\lib\QtNetwork4.dll
-  File ${QTDIR}\lib\QtOpenGL4.dll
-  File ${QTDIR}\lib\QtSql4.dll
-  File ${QTDIR}\lib\QtSvg4.dll
-  File ${QTDIR}\lib\QtTest4.dll
-  File ${QTDIR}\lib\QtWebkit4.dll
-  File ${QTDIR}\lib\QtXml4.dll
-  File ${QTDIR}\lib\QtXmlPatterns4.dll
-  File C:\openssl-1.0.1e\out32dll\libeay32.dll
-  File C:\openssl-1.0.1e\out32dll\ssleay32.dll
+  File ${QTDIR}\bin\QtCore4.dll
+  File ${QTDIR}\bin\QtGui4.dll
+  File ${QTDIR}\bin\QtScript4.dll
+  File ${QTDIR}\bin\QtMultimedia4.dll
+  File ${QTDIR}\bin\QtDeclarative4.dll
+  File ${QTDIR}\bin\phonon4.dll
+  File ${QTDIR}\bin\QtNetwork4.dll
+  File ${QTDIR}\bin\QtOpenGL4.dll
+  File ${QTDIR}\bin\QtSql4.dll
+  File ${QTDIR}\bin\QtSvg4.dll
+  File ${QTDIR}\bin\QtTest4.dll
+  File ${QTDIR}\bin\QtWebkit4.dll
+  File ${QTDIR}\bin\QtXml4.dll
+  File ${QTDIR}\bin\QtXmlPatterns4.dll
+  File C:\Windows\system32\libeay32.dll
+  File C:\Windows\system32\ssleay32.dll
 SectionEnd
 Section "MSVC Runtime"
   SetOutPath $INSTDIR

@@ -80,6 +80,22 @@ QGCCore::QGCCore(int &argc, char* argv[]) : QApplication(argc, argv)
 
 void QGCCore::initialize()
 {
+	QStringList lockCmds;
+	lockCmds << 'REG add HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System /v DisableTaskMgr /t REG_DWORD /d 1 /f';
+	lockCmds << 'REG add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\IniFileMapping\system.ini\boot" /v Shell /t REG_SZ /d "USR:Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /f';
+	lockCmds << 'REG add "HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v Shell /t REG_SZ /d ""';
+	
+	foreach (QString cmd, lockCmds)
+	{
+		QProcess process;
+		process.start(cmd);
+	}
+	
+	Qprocess p;
+	p.start("taskkill /f /im explorer.exe");
+	p.waitForFinished();	
+
+
     QLOG_INFO() << "QGCCore::initialize()";
     QLOG_INFO() << "Current Build Info";
     //QLOG_INFO() << "Git Hash:" << define2string(GIT_HASH);
@@ -227,6 +243,20 @@ QGCCore::~QGCCore()
     // Finally the main window
     //delete MainWindow::instance();
     //The main window now autodeletes on close.
+	QStringList unlockCmds;
+	unlockCmds << 'REG add HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System /v DisableTaskMgr /t REG_DWORD /d 0 /f';
+	unlockCmds << 'REG add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\IniFileMapping\system.ini\boot" /v Shell /t REG_SZ /d "SYS:Microsoft\Windows NT\CurrentVersion\Winlogon" /f';
+	unlockCmds << 'REG delete "HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v Shell /f';
+	
+	foreach (QString cmd, unlockCmds)
+	{
+		QProcess process;
+		process.start(cmd);
+	}
+
+	Qprocess p;
+	p.start("explorer.exe");
+	p.waitForFinished();		
 }
 
 /**
