@@ -1,16 +1,16 @@
 Name "APM Planner 2"
 
 !ifndef QTDIR
-!define QTDIR "$%QTDIR%"
+!define QTDIR "c:\sergey\qt\4.8.6"
 !endif
 
 !ifndef QTDIR
   !error "Please define QT installation directory via /DQTDIR=C:\qt\4.8.4"
 !endif
 
-!system 'python apm_installer.py ../files apm_install.list apm_uninstall.list y'
-!system 'python apm_installer.py ../qml qml_install.list qml_uninstall.list y'
-!system 'python apm_installer.py ${QTDIR}\plugins qt_install.list qt_uninstall.list n'
+!system 'c:/sergey/python27/python apm_installer.py ../files apm_install.list apm_uninstall.list y'
+!system 'c:/sergey/python27/python apm_installer.py ../qml qml_install.list qml_uninstall.list y'
+!system 'c:/sergey/python27/python apm_installer.py ${QTDIR}\plugins qt_install.list qt_uninstall.list n'
 
 OutFile "apmplanner2-installer-win32.exe"
 
@@ -46,20 +46,20 @@ Section "Qt components"
   !include qt_install.list
   SetOutPath $INSTDIR
 
-  File ${QTDIR}\bin\QtCore4.dll
-  File ${QTDIR}\bin\QtGui4.dll
-  File ${QTDIR}\bin\QtScript4.dll
-  File ${QTDIR}\bin\QtMultimedia4.dll
-  File ${QTDIR}\bin\QtDeclarative4.dll
-  File ${QTDIR}\bin\phonon4.dll
-  File ${QTDIR}\bin\QtNetwork4.dll
-  File ${QTDIR}\bin\QtOpenGL4.dll
-  File ${QTDIR}\bin\QtSql4.dll
-  File ${QTDIR}\bin\QtSvg4.dll
-  File ${QTDIR}\bin\QtTest4.dll
-  File ${QTDIR}\bin\QtWebkit4.dll
-  File ${QTDIR}\bin\QtXml4.dll
-  File ${QTDIR}\bin\QtXmlPatterns4.dll
+  File ${QTDIR}\bin\QtCored4.dll
+  File ${QTDIR}\bin\QtGuid4.dll
+  File ${QTDIR}\bin\QtScriptd4.dll
+  File ${QTDIR}\bin\QtMultimediad4.dll
+  File ${QTDIR}\bin\QtDeclaratived4.dll
+  File ${QTDIR}\bin\phonond4.dll
+  File ${QTDIR}\bin\QtNetworkd4.dll
+  File ${QTDIR}\bin\QtOpenGLd4.dll
+  File ${QTDIR}\bin\QtSqld4.dll
+  File ${QTDIR}\bin\QtSvgd4.dll
+  File ${QTDIR}\bin\QtTestd4.dll
+  File ${QTDIR}\bin\QtWebkitd4.dll
+  File ${QTDIR}\bin\QtXmld4.dll
+  File ${QTDIR}\bin\QtXmlPatternsd4.dll
   File C:\Windows\system32\libeay32.dll
   File C:\Windows\system32\ssleay32.dll
 SectionEnd
@@ -68,6 +68,8 @@ Section "MSVC Runtime"
   File vcredist_x86.exe
   DetailPrint "Installing MSVC2012 runtime"
   ExecWait "$INSTDIR/vcredist_x86.exe /q /norestart"
+  File C:\Windows\system32\msvcp100d.dll
+  File C:\Windows\system32\msvcr100d.dll
 SectionEnd
 Section "Uninstall"
   !include apm_uninstall.list
