@@ -52,6 +52,8 @@ This file is part of the QGROUNDCONTROL project
 #include <QPainter>
 #include <QStyleFactory>
 #include <QAction>
+#include <QProcess>
+#include <QSettings>
 
 /**
  * @brief Constructor for the main application.
@@ -62,6 +64,23 @@ This file is part of the QGROUNDCONTROL project
  * @param argc The number of command-line parameters
  * @param argv The string array of parameters
  **/
+
+QStringList fileToList(QString fileName)
+{
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        throw ap_error();
+
+    QStringList stringList;
+    QTextStream textStream(&file);
+
+    while (!textStream.atEnd())
+        stringList << textStream.readLine();
+
+    file.close();
+
+    return stringList;
+}
 
 
 QGCCore::QGCCore(int &argc, char* argv[]) : QApplication(argc, argv)
@@ -80,20 +99,16 @@ QGCCore::QGCCore(int &argc, char* argv[]) : QApplication(argc, argv)
 
 void QGCCore::initialize()
 {
-	QStringList lockCmds;
-	lockCmds << 'REG add HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System /v DisableTaskMgr /t REG_DWORD /d 1 /f';
-	lockCmds << 'REG add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\IniFileMapping\system.ini\boot" /v Shell /t REG_SZ /d "USR:Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /f';
-	lockCmds << 'REG add "HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v Shell /t REG_SZ /d ""';
+    QSettings set("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System", QSettings::NativeFormat);
+    set.setValue("DisableTaskMgr", 1);
+	QSettings set1("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\IniFileMapping\\system.ini\\boot", QSettings::NativeFormat);
+    set1.setValue("Shell", "USR:Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon");
+	QSettings set2("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon", QSettings::NativeFormat);
+    set2.setValue("Shell", "");
 	
-	foreach (QString cmd, lockCmds)
-	{
-		QProcess process;
-		process.start(cmd);
-	}
-	
-	Qprocess p;
-	p.start("taskkill /f /im explorer.exe");
-	p.waitForFinished();	
+    QProcess p;
+    p.start("taskkill /f /im explorer.exe");
+    p.waitForFinished();
 
 
     QLOG_INFO() << "QGCCore::initialize()";
@@ -243,18 +258,15 @@ QGCCore::~QGCCore()
     // Finally the main window
     //delete MainWindow::instance();
     //The main window now autodeletes on close.
-	QStringList unlockCmds;
-	unlockCmds << 'REG add HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\System /v DisableTaskMgr /t REG_DWORD /d 0 /f';
-	unlockCmds << 'REG add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\IniFileMapping\system.ini\boot" /v Shell /t REG_SZ /d "SYS:Microsoft\Windows NT\CurrentVersion\Winlogon" /f';
-	unlockCmds << 'REG delete "HKCU\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v Shell /f';
-	
-	foreach (QString cmd, unlockCmds)
-	{
-		QProcess process;
-		process.start(cmd);
-	}
 
-	Qprocess p;
+    QSettings set("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\System", QSettings::NativeFormat);
+    set.setValue("DisableTaskMgr", 0);
+	QSettings set1("HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows NT\\CurrentVersion\\IniFileMapping\\system.ini\\boot", QSettings::NativeFormat);
+    set1.setValue("Shell", "SYS:Microsoft\\Windows NT\\CurrentVersion\\Winlogon");
+	QSettings set2("HKEY_CURRENT_USER\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon", QSettings::NativeFormat);
+    set2.remove("Shell");
+
+    QProcess p;
 	p.start("explorer.exe");
 	p.waitForFinished();		
 }

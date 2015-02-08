@@ -82,6 +82,8 @@ This file is part of the QGROUNDCONTROL project
 #include <QGCHilConfiguration.h>
 #include <QGCHilFlightGearConfiguration.h>
 #include <QDeclarativeView>
+#include <QInputDialog>
+#include <QMessageBox>
 
 #define PFD_QML
 
@@ -1042,14 +1044,22 @@ void MainWindow::showHILConfigurationWidget(UASInterface* uas)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     event->ignore();
-    return;
-
-    if (isVisible()) storeViewState();
-    aboutToCloseFlag = true;
-    storeSettings();
-    mavlink->storeSettings();
-    UASManager::instance()->storeSettings();
-    QMainWindow::closeEvent(event);
+    bool ok;
+    QString text = QInputDialog::getText(this, tr("Enter password to exit"),tr("password:"), QLineEdit::Password,"", &ok);
+    if(ok)
+    {
+        if(text == "123")
+        {
+            if (isVisible()) storeViewState();
+            aboutToCloseFlag = true;
+            storeSettings();
+            mavlink->storeSettings();
+            UASManager::instance()->storeSettings();
+            QMainWindow::closeEvent(event);
+        }else{
+            QMessageBox::information(this, "", tr("Incorrect password"));
+        }
+    }
 }
 
 
