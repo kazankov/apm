@@ -2390,12 +2390,12 @@ void MainWindow::showAbout()
 
 void MainWindow::showAutoUpdateDownloadDialog(QString version, QString releaseType, QString url, QString name)
 {
-    QLOG_DEBUG() << "Update Available! Show Update Dialog";
+   /* QLOG_DEBUG() << "Update Available! Show Update Dialog";
     QLOG_DEBUG() << "Ver:" << version << "type:" << releaseType;
 
     m_dialog = new AutoUpdateDialog(version, name, url, this);
     connect(m_dialog, SIGNAL(autoUpdateCancelled(QString)), this, SLOT(autoUpdateCancelled(QString)));
-    m_dialog->show();
+    m_dialog->show();*/
 }
 
 void MainWindow::autoUpdateCancelled(QString version)
